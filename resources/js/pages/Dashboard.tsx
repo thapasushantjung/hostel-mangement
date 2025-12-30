@@ -15,10 +15,9 @@ import {
     IconAlertTriangle,
     IconUsers,
     IconArrowRight,
-    IconCloudOff,
 } from '@tabler/icons-react';
-import { useDashboardStats, syncPageData } from '@/lib/use-offline-data';
-import { useEffect } from 'react';
+
+
 import { formatCurrency } from '@/lib/utils';
 import { formatBS } from '@/lib/nepali-date';
 
@@ -52,19 +51,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Dashboard({ stats: serverStats, overdueInvoices: overdueData }: DashboardProps) {
     const overdueInvoicesArray = Array.isArray(overdueData) ? overdueData : (overdueData?.data ?? []);
 
-    // Use offline-first data hook
-    const { data: offlineStats, isFromCache } = useDashboardStats({
-        ...serverStats,
-        overdueInvoices: overdueInvoicesArray,
-    });
-
-    const stats = offlineStats.occupancy ? offlineStats : serverStats;
-    const overdueInvoices = isFromCache ? (offlineStats.overdueInvoices || []) : overdueInvoicesArray;
-
-    // Sync to local DB when online
-    useEffect(() => {
-        syncPageData('dashboard', { stats: serverStats, overdueInvoices: overdueData });
-    }, [serverStats, overdueData]);
+    const stats = serverStats;
+    const overdueInvoices = overdueInvoicesArray;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -76,12 +64,7 @@ export default function Dashboard({ stats: serverStats, overdueInvoices: overdue
                         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
                         <p className="text-muted-foreground">Welcome to your hostel management cockpit</p>
                     </div>
-                    {isFromCache && (
-                        <Badge variant="secondary" className="flex items-center gap-1">
-                            <IconCloudOff className="h-3 w-3" />
-                            Offline Data
-                        </Badge>
-                    )}
+
                 </div>
 
                 {/* Stats Cards */}

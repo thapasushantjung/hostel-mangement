@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\SyncController;
 use App\Http\Controllers\BedGridController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinanceController;
@@ -48,9 +47,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('settings/rooms/{room}', [SettingsController::class, 'destroyRoom'])->name('settings.rooms.destroy');
     Route::post('settings/staff', [SettingsController::class, 'storeStaff'])->name('settings.staff.store');
     Route::delete('settings/staff/{user}', [SettingsController::class, 'destroyStaff'])->name('settings.staff.destroy');
-
-    // Sync API for offline support
-    Route::get('api/sync/full', [SyncController::class, 'full'])->name('api.sync.full');
 });
 
 require __DIR__.'/settings.php';

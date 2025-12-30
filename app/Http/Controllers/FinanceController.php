@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Services\NepaliDate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -154,12 +155,14 @@ class FinanceController extends Controller
             'payment_date' => ['nullable', 'date'],
         ]);
 
-        $invoice->addPayment(
+        $payment = $invoice->addPayment(
             amount: $validated['amount'],
             mode: $validated['mode'],
             referenceNo: $validated['reference_no'] ?? null,
             remarks: $validated['remarks'] ?? null,
         );
+
+
 
         return back()->with('success', 'Payment of रू'.number_format($validated['amount']).' recorded');
     }

@@ -4,8 +4,6 @@ import { Head } from '@inertiajs/react';
 import { FloorSection } from '@/components/bed-grid/floor-section';
 import { Badge } from '@/components/ui/badge';
 import { IconCloudOff } from '@tabler/icons-react';
-import { useBedGridData, syncPageData } from '@/lib/use-offline-data';
-import { useEffect } from 'react';
 
 export interface TenantOption {
     id: number;
@@ -34,14 +32,7 @@ export default function BedGridIndex({ floors: floorsData, allTenants = [] }: Be
         ? floorsData
         : (floorsData?.data ?? []);
 
-    // Use offline-first data hook
-    const { data: offlineFloors, isFromCache } = useBedGridData(serverFloors);
-    const floors = isFromCache ? offlineFloors : serverFloors;
-
-    // Sync to local DB when online
-    useEffect(() => {
-        syncPageData('bedGrid', { floors: floorsData });
-    }, [floorsData]);
+    const floors = serverFloors;
 
     const totalBeds = floors.reduce(
         (acc, floor) =>
@@ -77,12 +68,7 @@ export default function BedGridIndex({ floors: floorsData, allTenants = [] }: Be
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {isFromCache && (
-                            <Badge variant="secondary" className="flex items-center gap-1">
-                                <IconCloudOff className="h-3 w-3" />
-                                Offline
-                            </Badge>
-                        )}
+
                         <div className="rounded-lg border bg-card p-3 text-center">
                             <div className="text-2xl font-bold">{occupancyRate}%</div>
                             <div className="text-xs text-muted-foreground">Occupancy</div>

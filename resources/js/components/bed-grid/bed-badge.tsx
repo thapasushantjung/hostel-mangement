@@ -27,9 +27,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { IconUser, IconPhone, IconHome, IconUserPlus, IconUsers, IconSearch } from '@tabler/icons-react';
+import { IconUser, IconPhone, IconHome, IconUserPlus, IconUsers, IconSearch, IconWifi } from '@tabler/icons-react';
 import { Link, router, useForm } from '@inertiajs/react';
 import { type TenantOption } from '@/pages/BedGrid/Index';
+
 
 interface BedBadgeProps {
     bed: Bed;

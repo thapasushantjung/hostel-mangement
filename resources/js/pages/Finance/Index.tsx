@@ -48,14 +48,11 @@ import {
     IconAlertTriangle,
     IconPlus,
     IconReceipt,
-    IconCloudOff,
     IconCreditCard,
     IconHistory,
     IconBan,
 } from '@tabler/icons-react';
-import { useState, useEffect } from 'react';
-import { useInvoicesData, syncPageData } from '@/lib/use-offline-data';
-import { useOnlineStatus } from '@/lib/use-offline';
+import { useState } from 'react';
 
 interface FinanceProps {
     invoices: { data: Invoice[] } | Invoice[];
@@ -108,17 +105,10 @@ export default function FinanceIndex({
     const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
     const [showPaymentSheet, setShowPaymentSheet] = useState(false);
     const [showVoidDialog, setShowVoidDialog] = useState(false);
-    const status = useOnlineStatus();
-    const isOffline = status === 'offline';
 
-    // Use offline-first data hook
-    const { data: offlineInvoices, isFromCache } = useInvoicesData(serverInvoices, activeTab);
-    const invoices = isFromCache ? offlineInvoices : serverInvoices;
 
-    // Sync to local DB when online
-    useEffect(() => {
-        syncPageData('finance', { invoices: invoicesData, expenses: expensesData, activeTab });
-    }, [invoicesData, expensesData, activeTab]);
+
+    const invoices = serverInvoices;
 
     const expenseForm = useForm({
         category: '',
@@ -149,10 +139,11 @@ export default function FinanceIndex({
         setShowPaymentSheet(true);
     };
 
-    const handleAddPayment = (e: React.FormEvent) => {
+    const handleAddPayment = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedInvoice) return;
 
+        // Online: post to server
         paymentForm.post(`/finance/invoices/${selectedInvoice.id}/payment`, {
             onSuccess: () => {
                 setShowPaymentSheet(false);
@@ -214,12 +205,7 @@ export default function FinanceIndex({
                             <h1 className="text-2xl font-bold tracking-tight">Finance</h1>
                             <p className="text-muted-foreground">Manage invoices, payments & expenses</p>
                         </div>
-                        {isFromCache && (
-                            <Badge variant="secondary" className="flex items-center gap-1">
-                                <IconCloudOff className="h-3 w-3" />
-                                Offline
-                            </Badge>
-                        )}
+
                     </div>
 
                     <Dialog open={showExpenseDialog} onOpenChange={setShowExpenseDialog}>

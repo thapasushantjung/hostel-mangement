@@ -4,16 +4,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-        {{-- PWA Meta Tags --}}
-        <meta name="theme-color" content="#3b82f6">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="default">
-        <meta name="apple-mobile-web-app-title" content="HostelMate">
-        <meta name="application-name" content="HostelMate">
-        <meta name="msapplication-TileColor" content="#3b82f6">
-        <meta name="description" content="Hostel & PG Management System">
-
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
@@ -42,9 +32,6 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        {{-- PWA Manifest --}}
-        <link rel="manifest" href="/manifest.webmanifest">
-
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -60,17 +47,15 @@
     <body class="font-sans antialiased">
         @inertia
 
-        {{-- Service Worker Registration --}}
         <script>
             if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                        .then((registration) => {
-                            console.log('[PWA] SW registered:', registration.scope);
-                        })
-                        .catch((error) => {
-                            console.log('[PWA] SW registration failed:', error);
-                        });
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                    if (registrations.length > 0) {
+                        window.location.reload();
+                    }
                 });
             }
         </script>
