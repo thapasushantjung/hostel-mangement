@@ -1,5 +1,9 @@
 <?php
 
+pest()->extend(Tests\DuskTestCase::class)
+//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
+    ->in('Browser');
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,7 +17,7 @@
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +45,12 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+
+function createOwnerWithHostel()
 {
-    // ..
+    $owner = \App\Models\User::factory()->create(['role' => 'owner']);
+    $hostel = \App\Models\Hostel::factory()->create(['owner_id' => $owner->id]);
+    $owner->update(['hostel_id' => $hostel->id]);
+
+    return $owner;
 }

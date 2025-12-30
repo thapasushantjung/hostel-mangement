@@ -17,7 +17,13 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'tenant_id' => \App\Models\Tenant::factory(),
+            'invoice_id' => \App\Models\Invoice::factory(),
+            'hostel_id' => \App\Models\Hostel::factory(),
+            'amount' => fake()->randomFloat(2, 500, 10000),
+            'payment_date' => now(),
+            'mode' => fake()->randomElement(['cash', 'esewa', 'khalti', 'bank', 'other']),
+            'remarks' => fake()->sentence(),
         ];
     }
 }

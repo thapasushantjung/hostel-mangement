@@ -22,6 +22,7 @@ class HostelFactory extends Factory
 
         return [
             'name' => fake()->company().' Hostel',
+            'owner_id' => User::factory(),
             'address' => fake()->streetAddress().', '.fake()->randomElement($nepaliCities),
             'phone' => '+977-'.fake()->numerify('##########'),
             'pricing_config' => [
